@@ -20,6 +20,8 @@ class ContentController < ApplicationController
   before_filter :setup_themer
   helper :theme
 
+
+
   protected
 
   # TODO: Make this work for all content.

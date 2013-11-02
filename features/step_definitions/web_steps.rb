@@ -43,6 +43,30 @@ Given /^the blog is set up$/ do
                 :state => 'active'})
 end
 
+Given /^a normal blog is set up$/ do
+  Blog.default.update_attributes!({:blog_name => 'Teh Blag',
+                                   :base_url => 'http://localhost:3000'});
+  Blog.default.save!
+  User.create!({:login => 'user',
+                :password => 'aaaaaaaa',
+                :email => 'joe2@snow.com',
+                :profile_id => 2,
+                :name => 'user',
+                :state => 'active'})
+end
+
+And /^I have logged in as "(.*)"$/ do |user|
+  visit '/accounts/login'
+  fill_in 'user_login', :with => user
+  fill_in 'user_password', :with => 'aaaaaaaa'
+  click_button 'Login'
+  if page.respond_to? :should
+    page.should have_content('Login successful')
+  else
+    assert page.has_content?('Login successful')
+  end
+end
+
 And /^I am logged into the admin panel$/ do
   visit '/accounts/login'
   fill_in 'user_login', :with => 'admin'
@@ -53,6 +77,13 @@ And /^I am logged into the admin panel$/ do
   else
     assert page.has_content?('Login successful')
   end
+end
+
+When /^I wrote article "(.*)"$/ do |article|
+    step %{I am on the new article page}
+    step %{I fill in "article_title" with "#{article}"}
+    step %{I fill in "article__body_and_extended_editor" with "#{article} content"}
+    step %{I press "Publish"}
 end
 
 # Single-line step scoper
@@ -275,4 +306,8 @@ end
 
 Then /^show me the page$/ do
   save_and_open_page
+end
+
+Then /^inspect/ do
+  print page.body
 end

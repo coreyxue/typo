@@ -171,6 +171,25 @@ class Article < Content
       end
   end
 
+  def merge_with(other_article_id)
+    other = Article.find_by_id(other_article_id)
+      if other == nil
+        return nil
+      end
+      comments = other.comments
+      comments.each do |comment|
+        Comment.update(comment.id,:article_id=>self.id)
+      end
+      #self.id,:body=>self.body + other.body
+      #Article.update(other.id,:id=>other.id)
+      other.reload
+      body = self.body+other.body
+      Article.update(self.id,:body=> body)
+      #self.updated_at = Time.now
+      other.destroy
+      return self
+    end
+
   def to_param
     param_array
   end

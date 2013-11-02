@@ -20,6 +20,7 @@ module Article::States
 
     def withdraw
     end
+
   end
 
   class New < Base

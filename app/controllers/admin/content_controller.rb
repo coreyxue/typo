@@ -23,6 +23,21 @@ class Admin::ContentController < Admin::BaseController
     end
   end
 
+  def merge
+    article = Article.find(params[:id])
+    #@new_article = article.merge_with(params[:other_id])
+    #print params["other_id"]+'----------------------'
+    if article.merge_with(params["merge_with"])!=nil
+      #redirect_to admin_content_path(:action=>nil,:id=>nil)
+      redirect_to "/admin/content/edit/#{params[:id]}"
+    else
+      flash[:notice] = "Invild id#{params[:other_id]}"
+      #redirect_to admin_content_path(:action=>nil,:id=>nil)
+      redirect_to "/admin/content/edit/#{params[:id]}"
+    end
+  end
+
+
   def new
     new_or_edit
   end
@@ -33,6 +48,10 @@ class Admin::ContentController < Admin::BaseController
       redirect_to :action => 'index'
       flash[:error] = _("Error, you are not allowed to perform this action")
       return
+    end
+    @flag = false
+    if current_user.profile_id == 1
+      @flag = true
     end
     new_or_edit
   end

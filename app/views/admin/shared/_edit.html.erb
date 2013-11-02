@@ -4,3 +4,13 @@
   <%= render :partial => "form" %>
 
 <% end %>
+<%if @flag%>
+	<%if form_action[:id]%>
+		<h3>Merge Articles</h3>
+		<%= form_tag({:action => 'merge',:id => form_action[:id]}) do %>
+		Article ID <%=text_field_tag 'merge_with'%>
+		<%= submit_tag 'Merge' %>
+
+		<% end %>
+	<% end %>
+<% end %>
